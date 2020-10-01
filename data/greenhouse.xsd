@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.example.com/greenhouse"
+        xmlns:tns="http://www.example.com/greenhouse"
+        elementFormDefault="qualified">
+    <element name="greenhouse">
+        <complexType>
+            <sequence>
+                <element name="flower"
+                         type="tns:Flower"
+                         minOccurs="2"
+                         maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <complexType name="Flower">
+        <sequence>
+            <element name="origin" type="tns:Origin"/>
+            <element name="visual-parameters" type="tns:VisualParameters"/>
+            <element name="growing-tips" type="tns:GrowingTips"/>
+            <element name="multiplying" type="string">
+                <simpleType>
+                    <restriction base="string">
+                        <enumeration value="leaves"/>
+                        <enumeration value="cuttings"/>
+                        <enumeration value="seeds"/>
+                    </restriction>
+                </simpleType>
+            </element>
+        </sequence>
+        <attribute name="name" type="tns:Name" use="required"/>
+        <attribute name="soil" default="podzolic">
+            <simpleType>
+                <restriction base="string">
+                    <enumeration value="podzolic"/>
+                    <enumeration value="unpaved"/>
+                    <enumeration value="sod-podzolic"/>
+                </restriction>
+            </simpleType>
+        </attribute>
+    </complexType>
+
+    <simpleType name="Name">
+        <restriction base="ID">
+            <pattern value="[\p{Alpha}]{3,20}"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="Origin">
+        <restriction base="string">
+            <pattern value="[\p{Alpha}]{3,20}"/>
+        </restriction>
+    </simpleType>
+
+    <complexType name="VisualParameters">
+        <sequence>
+            <element name="stem-color" type="tns:Color"/>
+            <element name="leave-color" type="tns:Color"/>
+            <element name="average-plant-size" type="tns:PlantSize"/>
+        </sequence>
+    </complexType>
+
+    <simpleType name="Color">
+        <restriction base="string">
+            <pattern value="[\p{Alpha}]{3,15}"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="PlantSize">
+        <restriction base="positiveInteger">
+            <pattern value="[\d]{1,4}"/>
+        </restriction>
+    </simpleType>
+
+    <complexType name="GrowingTips">
+        <sequence>
+            <element name="temperature" type="tns:Temperature"/>
+            <element name="need-lighting" type="boolean"/>
+            <element name="watering-per-week" type="tns:WateringPerWeek"/>
+        </sequence>
+    </complexType>
+
+    <simpleType name="Temperature">
+        <restriction base="integer">
+            <pattern value="\+?[\d]{1,2}"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="WateringPerWeek">
+        <restriction base="integer">
+            <pattern value="[\d]{1,1000}"/>
+        </restriction>
+    </simpleType>
+</schema>
