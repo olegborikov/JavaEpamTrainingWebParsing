@@ -3,22 +3,25 @@
         targetNamespace="http://www.example.com/greenhouse"
         xmlns:tns="http://www.example.com/greenhouse"
         elementFormDefault="qualified">
+    <element name="flower" type="tns:FlowerType" abstract="true"/>
+
+    <element name="decorative-flower" type="tns:DecorativeFlowerType" substitutionGroup="tns:flower"/>
+
+    <element name="wild-flower" type="tns:WildFlowerType" substitutionGroup="tns:flower"/>
+
     <element name="greenhouse">
         <complexType>
             <sequence>
-                <element name="flower"
-                         type="tns:Flower"
+                <element ref="tns:flower"
                          minOccurs="2"
                          maxOccurs="unbounded"/>
             </sequence>
         </complexType>
     </element>
 
-    <complexType name="Flower">
+    <complexType name="FlowerType">
         <sequence>
-            <element name="origin" type="tns:Origin"/>
             <element name="visual-parameters" type="tns:VisualParameters"/>
-            <element name="growing-tips" type="tns:GrowingTips"/>
             <element name="multiplying" type="string">
                 <simpleType>
                     <restriction base="string">
@@ -39,6 +42,26 @@
                 </restriction>
             </simpleType>
         </attribute>
+    </complexType>
+
+    <complexType name="DecorativeFlowerType">
+        <complexContent>
+            <extension base="tns:FlowerType">
+                <sequence>
+                    <element name="growing-tips" type="tns:GrowingTips"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <complexType name="WildFlowerType">
+        <complexContent>
+            <extension base="tns:FlowerType">
+                <sequence>
+                    <element name="origin" type="tns:Origin"/>
+                </sequence>
+            </extension>
+        </complexContent>
     </complexType>
 
     <simpleType name="Name">
