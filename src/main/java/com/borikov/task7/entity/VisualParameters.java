@@ -5,6 +5,9 @@ public class VisualParameters {
     private String leaveColor;
     private int averagePlantSize;
 
+    public VisualParameters() {
+    }
+
     public VisualParameters(String stemColor, String leaveColor,
                             int averagePlantSize) {
         this.stemColor = stemColor;

@@ -42,7 +42,7 @@
             <extension base="tns:FlowerType">
                 <sequence>
                     <element name="growing-tips" type="tns:GrowingTips"/>
-                    <element name="date-of-landing" type="gYear"/>
+                    <element name="date-of-landing" type="date"/>
                 </sequence>
             </extension>
         </complexContent>
@@ -52,7 +52,6 @@
         <complexContent>
             <extension base="tns:FlowerType">
                 <sequence>
-                    <element name="origin" type="tns:Origin"/>
                     <element name="multiplying" type="string">
                         <simpleType>
                             <restriction base="string">
@@ -62,6 +61,7 @@
                             </restriction>
                         </simpleType>
                     </element>
+                    <element name="origin" type="tns:Origin"/>
                 </sequence>
             </extension>
         </complexContent>
@@ -97,7 +97,7 @@
         <sequence>
             <element name="temperature" type="tns:Temperature"/>
             <element name="need-light" type="boolean"/>
-            <element name="watering-per-week" type="tns:WateringPerWeek"/>
+            <element name="water-per-week" type="tns:WaterPerWeek"/>
         </sequence>
     </complexType>
 
@@ -107,7 +107,7 @@
         </restriction>
     </simpleType>
 
-    <simpleType name="WateringPerWeek">
+    <simpleType name="WaterPerWeek">
         <restriction base="integer">
             <pattern value="[\d]{1,1000}"/>
         </restriction>

@@ -4,7 +4,10 @@ public abstract class Flower {
     private String name;
     private SoilType soilType;
     private VisualParameters visualParameters;
-    private static final SoilType SOIL_TYPE_DEFAULT = SoilType.PODZOLIC;
+
+    public Flower() {
+        visualParameters = new VisualParameters();
+    }
 
     public Flower(String name, SoilType soilType, VisualParameters visualParameters) {
         this.name = name;

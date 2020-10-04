@@ -6,6 +6,10 @@ public class DecorativeFlower extends Flower {
     private GrowingTips growingTips;
     private Date dateOfLanding;
 
+    public DecorativeFlower() {
+        growingTips = new GrowingTips();
+    }
+
     public DecorativeFlower(String name, SoilType soilType,
                             VisualParameters visualParameters,
                             GrowingTips growingTips, Date dateOfLanding) {

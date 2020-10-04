@@ -5,6 +5,9 @@ public class GrowingTips {
     private boolean needLight;
     private int watterPerWeek;
 
+    public GrowingTips() {
+    }
+
     public GrowingTips(int temperature, boolean needLight, int watterPerWeek) {
         this.temperature = temperature;
         this.needLight = needLight;

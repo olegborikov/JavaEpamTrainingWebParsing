@@ -6,17 +6,17 @@
             <leave-color>red</leave-color>
             <average-plant-size>40</average-plant-size>
         </visual-parameters>
-        <multiplying>cuttings</multiplying>
         <growing-tips>
             <temperature>20</temperature>
-            <need-lighting>true</need-lighting>
-            <watering-per-week>100</watering-per-week>
+            <need-light>true</need-light>
+            <water-per-week>100</water-per-week>
         </growing-tips>
+        <date-of-landing>2020-01-01</date-of-landing>
     </decorative-flower>
 
     <wild-flower name="thrift">
         <visual-parameters>
-            <stem-color>white</stem-color>
+            <stem-color>blue</stem-color>
             <leave-color>pink</leave-color>
             <average-plant-size>25</average-plant-size>
         </visual-parameters>

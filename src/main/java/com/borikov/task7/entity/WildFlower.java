@@ -1,22 +1,17 @@
 package com.borikov.task7.entity;
 
 public class WildFlower extends Flower {
-    private String origin;
     private MultiplyingType multiplyingType;
+    private String origin;
+
+    public WildFlower() {
+    }
 
     public WildFlower(String name, SoilType soilType,
                       VisualParameters visualParameters,
-                      String origin, MultiplyingType multiplyingType) {
+                      MultiplyingType multiplyingType, String origin) {
         super(name, soilType, visualParameters);
-        this.origin = origin;
         this.multiplyingType = multiplyingType;
-    }
-
-    public String getOrigin() {
-        return origin;
-    }
-
-    public void setOrigin(String origin) {
         this.origin = origin;
     }
 
@@ -26,6 +21,14 @@ public class WildFlower extends Flower {
 
     public void setMultiplyingType(MultiplyingType multiplyingType) {
         this.multiplyingType = multiplyingType;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
     }
 
     @Override
@@ -40,17 +43,17 @@ public class WildFlower extends Flower {
             return false;
         }
         WildFlower that = (WildFlower) o;
-        if (origin != null ? !origin.equals(that.origin) : that.origin != null) {
+        if (multiplyingType != that.multiplyingType) {
             return false;
         }
-        return multiplyingType == that.multiplyingType;
+        return origin != null ? origin.equals(that.origin) : that.origin == null;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (origin != null ? origin.hashCode() : 0);
         result = 31 * result + (multiplyingType != null ? multiplyingType.hashCode() : 0);
+        result = 31 * result + (origin != null ? origin.hashCode() : 0);
         return result;
     }
 
@@ -58,8 +61,8 @@ public class WildFlower extends Flower {
     public String toString() {
         final StringBuilder sb = new StringBuilder("WildFlower{");
         sb.append(super.toString());
-        sb.append("origin='").append(origin).append('\'');
-        sb.append(", multiplyingType=").append(multiplyingType);
+        sb.append("multiplyingType=").append(multiplyingType);
+        sb.append(", origin='").append(origin).append('\'');
         sb.append('}');
         return sb.toString();
     }
