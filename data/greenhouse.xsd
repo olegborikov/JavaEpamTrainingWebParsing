@@ -5,9 +5,11 @@
         elementFormDefault="qualified">
     <element name="flower" type="tns:FlowerType" abstract="true"/>
 
-    <element name="decorative-flower" type="tns:DecorativeFlowerType" substitutionGroup="tns:flower"/>
+    <element name="decorative-flower" type="tns:DecorativeFlowerType"
+             substitutionGroup="tns:flower"/>
 
-    <element name="wild-flower" type="tns:WildFlowerType" substitutionGroup="tns:flower"/>
+    <element name="wild-flower" type="tns:WildFlowerType"
+             substitutionGroup="tns:flower"/>
 
     <element name="greenhouse">
         <complexType>
@@ -22,15 +24,6 @@
     <complexType name="FlowerType">
         <sequence>
             <element name="visual-parameters" type="tns:VisualParameters"/>
-            <element name="multiplying" type="string">
-                <simpleType>
-                    <restriction base="string">
-                        <enumeration value="leaves"/>
-                        <enumeration value="cuttings"/>
-                        <enumeration value="seeds"/>
-                    </restriction>
-                </simpleType>
-            </element>
         </sequence>
         <attribute name="name" type="tns:Name" use="required"/>
         <attribute name="soil" default="podzolic">
@@ -49,6 +42,7 @@
             <extension base="tns:FlowerType">
                 <sequence>
                     <element name="growing-tips" type="tns:GrowingTips"/>
+                    <element name="date-of-landing" type="gYear"/>
                 </sequence>
             </extension>
         </complexContent>
@@ -59,22 +53,19 @@
             <extension base="tns:FlowerType">
                 <sequence>
                     <element name="origin" type="tns:Origin"/>
+                    <element name="multiplying" type="string">
+                        <simpleType>
+                            <restriction base="string">
+                                <enumeration value="leaves"/>
+                                <enumeration value="cuttings"/>
+                                <enumeration value="seeds"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
                 </sequence>
             </extension>
         </complexContent>
     </complexType>
-
-    <simpleType name="Name">
-        <restriction base="ID">
-            <pattern value="[\p{Alpha}]{3,20}"/>
-        </restriction>
-    </simpleType>
-
-    <simpleType name="Origin">
-        <restriction base="string">
-            <pattern value="[\p{Alpha}]{3,20}"/>
-        </restriction>
-    </simpleType>
 
     <complexType name="VisualParameters">
         <sequence>
@@ -96,10 +87,16 @@
         </restriction>
     </simpleType>
 
+    <simpleType name="Name">
+        <restriction base="ID">
+            <pattern value="[\p{Alpha}]{3,20}"/>
+        </restriction>
+    </simpleType>
+
     <complexType name="GrowingTips">
         <sequence>
             <element name="temperature" type="tns:Temperature"/>
-            <element name="need-lighting" type="boolean"/>
+            <element name="need-light" type="boolean"/>
             <element name="watering-per-week" type="tns:WateringPerWeek"/>
         </sequence>
     </complexType>
@@ -113,6 +110,12 @@
     <simpleType name="WateringPerWeek">
         <restriction base="integer">
             <pattern value="[\d]{1,1000}"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="Origin">
+        <restriction base="string">
+            <pattern value="[\p{Alpha}]{3,20}"/>
         </restriction>
     </simpleType>
 </schema>
