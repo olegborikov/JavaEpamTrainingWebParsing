@@ -77,7 +77,7 @@
 
     <simpleType name="Color">
         <restriction base="string">
-            <pattern value="[\p{Alpha}]{3,15}"/>
+            <pattern value="[a-zA-Z]{3,15}"/>
         </restriction>
     </simpleType>
 
@@ -89,7 +89,7 @@
 
     <simpleType name="Name">
         <restriction base="ID">
-            <pattern value="[\p{Alpha}]{3,20}"/>
+            <pattern value="[a-zA-Z}]{3,20}"/>
         </restriction>
     </simpleType>
 
@@ -109,13 +109,13 @@
 
     <simpleType name="WaterPerWeek">
         <restriction base="integer">
-            <pattern value="[\d]{1,1000}"/>
+            <pattern value="[\d]{1,4}"/>
         </restriction>
     </simpleType>
 
     <simpleType name="Origin">
         <restriction base="string">
-            <pattern value="[\p{Alpha}]{3,20}"/>
+            <pattern value="[a-zA-Z]{3,20}"/>
         </restriction>
     </simpleType>
 </schema>

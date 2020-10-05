@@ -65,6 +65,7 @@ public class FlowerDomBuilder {
     private Flower buildFlowers(Element flowerElement, Flower flower) {
         String soilName = flowerElement.getAttribute(FlowerXmlTag.SOIL.getValue());
         if (soilName != null && !soilName.isBlank()) {
+            soilName = soilName.replace('-', '_');
             flower.setSoilType(SoilType.valueOf(soilName.toUpperCase()));
         } else {
             flower.setSoilType(SOIL_TYPE_DEFAULT);

@@ -1,5 +1,159 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <greenhouse xmlns="http://www.example.com/greenhouse">
+    <wild-flower name="fireweed" soil="unpaved">
+        <visual-parameters>
+            <stem-color>white</stem-color>
+            <leave-color>green</leave-color>
+            <average-plant-size>10</average-plant-size>
+        </visual-parameters>
+        <multiplying>seeds</multiplying>
+        <origin>Russia</origin>
+    </wild-flower>
+
+    <decorative-flower name="cactus" soil="podzolic">
+        <visual-parameters>
+            <stem-color>green</stem-color>
+            <leave-color>green</leave-color>
+            <average-plant-size>10</average-plant-size>
+        </visual-parameters>
+        <growing-tips>
+            <temperature>25</temperature>
+            <need-light>false</need-light>
+            <water-per-week>10</water-per-week>
+        </growing-tips>
+        <date-of-landing>2015-10-12</date-of-landing>
+    </decorative-flower>
+
+    <decorative-flower name="schlumberger">
+        <visual-parameters>
+            <stem-color>green</stem-color>
+            <leave-color>pink</leave-color>
+            <average-plant-size>30</average-plant-size>
+        </visual-parameters>
+        <growing-tips>
+            <temperature>15</temperature>
+            <need-light>false</need-light>
+            <water-per-week>700</water-per-week>
+        </growing-tips>
+        <date-of-landing>2017-04-10</date-of-landing>
+    </decorative-flower>
+
+    <wild-flower name="thrift">
+        <visual-parameters>
+            <stem-color>blue</stem-color>
+            <leave-color>pink</leave-color>
+            <average-plant-size>25</average-plant-size>
+        </visual-parameters>
+        <multiplying>seeds</multiplying>
+        <origin>Belarus</origin>
+    </wild-flower>
+
+    <decorative-flower name="lofofora" soil="unpaved">
+        <visual-parameters>
+            <stem-color>green</stem-color>
+            <leave-color>white</leave-color>
+            <average-plant-size>5</average-plant-size>
+        </visual-parameters>
+        <growing-tips>
+            <temperature>20</temperature>
+            <need-light>false</need-light>
+            <water-per-week>300</water-per-week>
+        </growing-tips>
+        <date-of-landing>2018-10-10</date-of-landing>
+    </decorative-flower>
+
+    <wild-flower name="gentian" soil="podzolic">
+        <visual-parameters>
+            <stem-color>white</stem-color>
+            <leave-color>blue</leave-color>
+            <average-plant-size>35</average-plant-size>
+        </visual-parameters>
+        <multiplying>cuttings</multiplying>
+        <origin>Belarus</origin>
+    </wild-flower>
+
+    <decorative-flower name="peyote" soil="sod-podzolic">
+        <visual-parameters>
+            <stem-color>white</stem-color>
+            <leave-color>white</leave-color>
+            <average-plant-size>30</average-plant-size>
+        </visual-parameters>
+        <growing-tips>
+            <temperature>15</temperature>
+            <need-light>false</need-light>
+            <water-per-week>500</water-per-week>
+        </growing-tips>
+        <date-of-landing>2020-03-04</date-of-landing>
+    </decorative-flower>
+
+    <wild-flower name="delphinium" soil="sod-podzolic">
+        <visual-parameters>
+            <stem-color>green</stem-color>
+            <leave-color>yellow</leave-color>
+            <average-plant-size>20</average-plant-size>
+        </visual-parameters>
+        <multiplying>leaves</multiplying>
+        <origin>Russia</origin>
+    </wild-flower>
+
+    <decorative-flower name="nopal">
+        <visual-parameters>
+            <stem-color>green</stem-color>
+            <leave-color>green</leave-color>
+            <average-plant-size>100</average-plant-size>
+        </visual-parameters>
+        <growing-tips>
+            <temperature>27</temperature>
+            <need-light>false</need-light>
+            <water-per-week>10</water-per-week>
+        </growing-tips>
+        <date-of-landing>2018-10-03</date-of-landing>
+    </decorative-flower>
+
+    <wild-flower name="clover" soil="sod-podzolic">
+        <visual-parameters>
+            <stem-color>green</stem-color>
+            <leave-color>purple</leave-color>
+            <average-plant-size>5</average-plant-size>
+        </visual-parameters>
+        <multiplying>leaves</multiplying>
+        <origin>German</origin>
+    </wild-flower>
+
+    <decorative-flower name="lophophora" soil="unpaved">
+        <visual-parameters>
+            <stem-color>white</stem-color>
+            <leave-color>green</leave-color>
+            <average-plant-size>25</average-plant-size>
+        </visual-parameters>
+        <growing-tips>
+            <temperature>15</temperature>
+            <need-light>true</need-light>
+            <water-per-week>75</water-per-week>
+        </growing-tips>
+        <date-of-landing>2018-04-04</date-of-landing>
+    </decorative-flower>
+
+    <wild-flower name="aconite" soil="unpaved">
+        <visual-parameters>
+            <stem-color>green</stem-color>
+            <leave-color>purple</leave-color>
+            <average-plant-size>40</average-plant-size>
+        </visual-parameters>
+        <multiplying>cuttings</multiplying>
+        <origin>Ukraine</origin>
+    </wild-flower>
+
+    <wild-flower name="altay" soil="sod-podzolic">
+        <visual-parameters>
+            <stem-color>white</stem-color>
+            <leave-color>pink</leave-color>
+            <average-plant-size>30</average-plant-size>
+        </visual-parameters>
+        <multiplying>leaves</multiplying>
+        <origin>USA</origin>
+    </wild-flower>
+
     <decorative-flower name="rose" soil="unpaved">
         <visual-parameters>
             <stem-color>white</stem-color>
@@ -14,13 +168,27 @@
         <date-of-landing>2020-01-01</date-of-landing>
     </decorative-flower>
 
-    <wild-flower name="thrift">
+    <decorative-flower name="lavender" soil="sod-podzolic">
         <visual-parameters>
-            <stem-color>blue</stem-color>
-            <leave-color>pink</leave-color>
-            <average-plant-size>25</average-plant-size>
+            <stem-color>white</stem-color>
+            <leave-color>purple</leave-color>
+            <average-plant-size>10</average-plant-size>
         </visual-parameters>
-        <multiplying>seeds</multiplying>
-        <origin>Belarus</origin>
+        <growing-tips>
+            <temperature>15</temperature>
+            <need-light>true</need-light>
+            <water-per-week>1250</water-per-week>
+        </growing-tips>
+        <date-of-landing>2019-03-01</date-of-landing>
+    </decorative-flower>
+
+    <wild-flower name="carnation">
+        <visual-parameters>
+            <stem-color>white</stem-color>
+            <leave-color>red</leave-color>
+            <average-plant-size>35</average-plant-size>
+        </visual-parameters>
+        <multiplying>leaves</multiplying>
+        <origin>Poland</origin>
     </wild-flower>
 </greenhouse>
