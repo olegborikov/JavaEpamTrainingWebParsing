@@ -1,7 +1,6 @@
 package com.borikov.task7.builder;
 
-import com.borikov.task7.entity.DecorativeFlower;
-import com.borikov.task7.builder.handler.DecorativeFlowerHandler;
+import com.borikov.task7.entity.Flower;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,13 +14,13 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 
-public class DecorativeFlowerSaxBuilder {
+public class FlowerSaxBuilder {
     private static final Logger LOGGER = LogManager.getLogger();
-    private Set<DecorativeFlower> decorativeFlowers;
-    private DecorativeFlowerHandler decorativeFlowerHandler = new DecorativeFlowerHandler();
+    private Set<Flower> flowers;
+    private FlowerHandler flowerHandler = new FlowerHandler();
     private XMLReader xmlReader;
 
-    public DecorativeFlowerSaxBuilder() {
+    public FlowerSaxBuilder() {
         SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
         try {
             SAXParser saxParser = saxParserFactory.newSAXParser();
@@ -29,19 +28,19 @@ public class DecorativeFlowerSaxBuilder {
         } catch (SAXException | ParserConfigurationException e) {
             LOGGER.log(Level.ERROR, "Error while parsing", e);
         }
-        xmlReader.setContentHandler(decorativeFlowerHandler);
+        xmlReader.setContentHandler(flowerHandler);
     }
 
-    public Set<DecorativeFlower> getDecorativeFlowers() {
-        return Collections.unmodifiableSet(decorativeFlowers);
+    public Set<Flower> getFlowers() {
+        return Collections.unmodifiableSet(flowers);
     }
 
-    public void buildSetDecorativeFlowers(String fileName) {
+    public void buildSetFlowers(String fileName) {
         try {
             xmlReader.parse(fileName);
         } catch (SAXException | IOException e) {
             LOGGER.log(Level.ERROR, "Error while parsing", e);
         }
-        decorativeFlowers = decorativeFlowerHandler.getDecorativeFlowers();
+        flowers = flowerHandler.getFlowers();
     }
 }
