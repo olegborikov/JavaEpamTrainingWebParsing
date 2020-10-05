@@ -1,7 +1,7 @@
 package com.borikov.task7.builder;
 
 import com.borikov.task7.entity.DecorativeFlower;
-import com.borikov.task7.handler.DecorativeFlowerHandler;
+import com.borikov.task7.builder.handler.DecorativeFlowerHandler;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,5 +1,6 @@
-package com.borikov.task7.handler;
+package com.borikov.task7.builder.handler;
 
+import com.borikov.task7.builder.FlowerXmlTag;
 import com.borikov.task7.entity.MultiplyingType;
 import com.borikov.task7.entity.SoilType;
 import com.borikov.task7.entity.WildFlower;

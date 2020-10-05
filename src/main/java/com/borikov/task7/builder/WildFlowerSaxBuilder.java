@@ -1,7 +1,7 @@
 package com.borikov.task7.builder;
 
 import com.borikov.task7.entity.WildFlower;
-import com.borikov.task7.handler.WildFlowerHandler;
+import com.borikov.task7.builder.handler.WildFlowerHandler;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

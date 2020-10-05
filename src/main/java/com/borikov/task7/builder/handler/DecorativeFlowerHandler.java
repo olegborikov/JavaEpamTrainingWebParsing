@@ -1,5 +1,6 @@
-package com.borikov.task7.handler;
+package com.borikov.task7.builder.handler;
 
+import com.borikov.task7.builder.FlowerXmlTag;
 import com.borikov.task7.entity.DecorativeFlower;
 import com.borikov.task7.entity.SoilType;
 import org.apache.logging.log4j.Level;
@@ -70,10 +71,9 @@ public class DecorativeFlowerHandler extends DefaultHandler {
             switch (currentXmlTag) {
                 case TEMPERATURE -> currentDecorativeFlower.getGrowingTips().setTemperature(Integer.parseInt(data));
                 case NEED_LIGHT -> currentDecorativeFlower.getGrowingTips().setNeedLight(Boolean.parseBoolean(data));
-                case WATER_PER_WEEK -> currentDecorativeFlower.getGrowingTips().setWatterPerWeek(Integer.parseInt(data));
+                case WATER_PER_WEEK -> currentDecorativeFlower.getGrowingTips().setWaterPerWeek(Integer.parseInt(data));
                 case DATE_OF_LANDING -> {
                     try {
-                        System.out.println(data);
                         currentDecorativeFlower.setDateOfLanding(simpleDateFormat.parse(data));
                     } catch (ParseException e) {
                         LOGGER.log(Level.ERROR, "Error while parsing date", e);

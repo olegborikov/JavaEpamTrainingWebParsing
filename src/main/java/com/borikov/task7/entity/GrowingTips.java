@@ -3,15 +3,15 @@ package com.borikov.task7.entity;
 public class GrowingTips {
     private int temperature;
     private boolean needLight;
-    private int watterPerWeek;
+    private int waterPerWeek;
 
     public GrowingTips() {
     }
 
-    public GrowingTips(int temperature, boolean needLight, int watterPerWeek) {
+    public GrowingTips(int temperature, boolean needLight, int waterPerWeek) {
         this.temperature = temperature;
         this.needLight = needLight;
-        this.watterPerWeek = watterPerWeek;
+        this.waterPerWeek = waterPerWeek;
     }
 
     public int getTemperature() {
@@ -30,12 +30,12 @@ public class GrowingTips {
         this.needLight = needLight;
     }
 
-    public int getWatterPerWeek() {
-        return watterPerWeek;
+    public int getWaterPerWeek() {
+        return waterPerWeek;
     }
 
-    public void setWatterPerWeek(int watterPerWeek) {
-        this.watterPerWeek = watterPerWeek;
+    public void setWaterPerWeek(int waterPerWeek) {
+        this.waterPerWeek = waterPerWeek;
     }
 
     @Override
@@ -53,14 +53,14 @@ public class GrowingTips {
         if (needLight != that.needLight) {
             return false;
         }
-        return watterPerWeek == that.watterPerWeek;
+        return waterPerWeek == that.waterPerWeek;
     }
 
     @Override
     public int hashCode() {
         int result = temperature;
         result = 31 * result + (needLight ? 1 : 0);
-        result = 31 * result + watterPerWeek;
+        result = 31 * result + waterPerWeek;
         return result;
     }
 
@@ -69,7 +69,7 @@ public class GrowingTips {
         final StringBuilder sb = new StringBuilder("GrowingTips{");
         sb.append("temperature=").append(temperature);
         sb.append(", needLight=").append(needLight);
-        sb.append(", watterPerWeek=").append(watterPerWeek);
+        sb.append(", watterPerWeek=").append(waterPerWeek);
         sb.append('}');
         return sb.toString();
     }

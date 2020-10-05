@@ -1,4 +1,4 @@
-package com.borikov.task7.handler;
+package com.borikov.task7.builder;
 
 public enum FlowerXmlTag {
     GREENHOUSE("greenhouse"),
