@@ -1,5 +1,7 @@
-package com.borikov.task7.builder;
+package com.borikov.task7.builder.impl;
 
+import com.borikov.task7.builder.AbstractFlowerBuilder;
+import com.borikov.task7.builder.FlowerXmlTag;
 import com.borikov.task7.entity.*;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -16,28 +18,21 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
-public class FlowerDomBuilder {
-    private static final Logger LOGGER = LogManager.getLogger();
+public class FlowerDOMBuilder extends AbstractFlowerBuilder {
     private static final SoilType SOIL_TYPE_DEFAULT = SoilType.PODZOLIC;
-    private Set<Flower> flowers;
     private DocumentBuilder documentBuilder;
+    private static final Logger LOGGER = LogManager.getLogger();
+    private static final char OLD_SYMBOL_REPLACE = '-';
+    private static final char NEW_SYMBOL_REPLACE = '_';
 
-    public FlowerDomBuilder() {
-        flowers = new HashSet<>();
+    public FlowerDOMBuilder() {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         try {
             documentBuilder = documentBuilderFactory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
             LOGGER.log(Level.ERROR, "Error in parser configuration", e);
         }
-    }
-
-    public Set<Flower> getFlowers() {
-        return Collections.unmodifiableSet(flowers);
     }
 
     public void buildSetFlowers(String fileName) {
@@ -65,7 +60,7 @@ public class FlowerDomBuilder {
     private Flower buildFlowers(Element flowerElement, Flower flower) {
         String soilName = flowerElement.getAttribute(FlowerXmlTag.SOIL.getValue());
         if (soilName != null && !soilName.isBlank()) {
-            soilName = soilName.replace('-', '_');
+            soilName = soilName.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
             flower.setSoilType(SoilType.valueOf(soilName.toUpperCase()));
         } else {
             flower.setSoilType(SOIL_TYPE_DEFAULT);
@@ -95,7 +90,7 @@ public class FlowerDomBuilder {
             }
         } else {
             String multiplying = getElementTextContent(flowerElement, FlowerXmlTag.MULTIPLYING.getValue());
-            multiplying = multiplying.replace('-', '_');
+            multiplying = multiplying.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
             ((WildFlower) flower).setMultiplyingType(MultiplyingType.valueOf(multiplying.toUpperCase()));
             String origin = getElementTextContent(flowerElement, FlowerXmlTag.ORIGIN.getValue());
             ((WildFlower) flower).setOrigin(origin);

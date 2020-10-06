@@ -1,5 +1,7 @@
-package com.borikov.task7.builder;
+package com.borikov.task7.builder.impl;
 
+import com.borikov.task7.builder.AbstractFlowerBuilder;
+import com.borikov.task7.builder.FlowerXmlTag;
 import com.borikov.task7.entity.*;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -15,22 +17,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
-public class FlowerStaxBuilder {
-    private static final Logger LOGGER = LogManager.getLogger();
+public class FlowerStAXBuilder extends AbstractFlowerBuilder {
     private static final SoilType SOIL_TYPE_DEFAULT = SoilType.PODZOLIC;
-    private Set<Flower> flowers = new HashSet<>();
     private XMLInputFactory inputFactory;
+    private static final Logger LOGGER = LogManager.getLogger();
+    private static final char OLD_SYMBOL_REPLACE = '-';
+    private static final char NEW_SYMBOL_REPLACE = '_';
 
-    public FlowerStaxBuilder() {
+    public FlowerStAXBuilder() {
         inputFactory = XMLInputFactory.newInstance();
-    }
-
-    public Set<Flower> getFlowers() {
-        return Collections.unmodifiableSet(flowers);
     }
 
     public void buildSetFlowers(String fileName) {
@@ -40,7 +36,7 @@ public class FlowerStaxBuilder {
                 int type = xmlStreamReader.next();
                 if (type == XMLStreamConstants.START_ELEMENT) {
                     String name = xmlStreamReader.getLocalName();
-                    name = name.replace('-', '_');
+                    name = name.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
                     if (FlowerXmlTag.valueOf(name.toUpperCase()) == FlowerXmlTag.DECORATIVE_FLOWER) {
                         Flower flower = buildFlower(xmlStreamReader, new DecorativeFlower());
                         flowers.add(flower);
@@ -64,7 +60,7 @@ public class FlowerStaxBuilder {
         flower.setName(xmlStreamReader.getAttributeValue(null, FlowerXmlTag.NAME.getValue()));
         String soil = (xmlStreamReader.getAttributeValue(null, FlowerXmlTag.SOIL.getValue()));
         if (soil != null) {
-            soil = soil.replace('-', '_');
+            soil = soil.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
             flower.setSoilType(SoilType.valueOf(soil.toUpperCase()));
         } else {
             flower.setSoilType(SOIL_TYPE_DEFAULT);
@@ -75,7 +71,7 @@ public class FlowerStaxBuilder {
             switch (type) {
                 case XMLStreamConstants.START_ELEMENT -> {
                     name = xmlStreamReader.getLocalName();
-                    name = name.replace('-', '_');
+                    name = name.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
                     switch (FlowerXmlTag.valueOf(name.toUpperCase())) {
                         case VISUAL_PARAMETERS -> flower.setVisualParameters(getXmlVisualParameters(xmlStreamReader));
                         case GROWING_TIPS -> ((DecorativeFlower) flower).setGrowingTips(getXmlGrowingTips(xmlStreamReader));
@@ -89,7 +85,7 @@ public class FlowerStaxBuilder {
                         }
                         case MULTIPLYING -> {
                             String multiplying = getXmlText(xmlStreamReader);
-                            multiplying = multiplying.replace('-', '_');
+                            multiplying = multiplying.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
                             ((WildFlower) flower).setMultiplyingType(MultiplyingType.valueOf(multiplying.toUpperCase()));
                         }
                         case ORIGIN -> ((WildFlower) flower).setOrigin(getXmlText(xmlStreamReader));
@@ -97,7 +93,7 @@ public class FlowerStaxBuilder {
                 }
                 case XMLStreamConstants.END_ELEMENT -> {
                     name = xmlStreamReader.getLocalName();
-                    name = name.replace('-', '_');
+                    name = name.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
                     if (FlowerXmlTag.valueOf(name.toUpperCase()) == FlowerXmlTag.DECORATIVE_FLOWER
                             || FlowerXmlTag.valueOf(name.toUpperCase()) == FlowerXmlTag.WILD_FLOWER) {
                         return flower;
@@ -117,7 +113,7 @@ public class FlowerStaxBuilder {
             switch (type) {
                 case XMLStreamConstants.START_ELEMENT -> {
                     name = xmlStreamReader.getLocalName();
-                    name = name.replace('-', '_');
+                    name = name.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
                     switch (FlowerXmlTag.valueOf(name.toUpperCase())) {
                         case STEM_COLOR -> visualParameters.setStemColor(getXmlText(xmlStreamReader));
                         case LEAVE_COLOR -> visualParameters.setLeaveColor(getXmlText(xmlStreamReader));
@@ -129,7 +125,7 @@ public class FlowerStaxBuilder {
                 }
                 case XMLStreamConstants.END_ELEMENT -> {
                     name = xmlStreamReader.getLocalName();
-                    name = name.replace('-', '_');
+                    name = name.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
                     if (FlowerXmlTag.valueOf(name.toUpperCase()) == FlowerXmlTag.VISUAL_PARAMETERS) {
                         return visualParameters;
                     }
@@ -148,7 +144,7 @@ public class FlowerStaxBuilder {
             switch (type) {
                 case XMLStreamConstants.START_ELEMENT -> {
                     name = xmlStreamReader.getLocalName();
-                    name = name.replace('-', '_');
+                    name = name.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
                     switch (FlowerXmlTag.valueOf(name.toUpperCase())) {
                         case TEMPERATURE -> growingTips.setTemperature(Integer.parseInt(getXmlText(xmlStreamReader)));
                         case NEED_LIGHT -> growingTips.setNeedLight(Boolean.parseBoolean(getXmlText(xmlStreamReader)));
@@ -157,7 +153,7 @@ public class FlowerStaxBuilder {
                 }
                 case XMLStreamConstants.END_ELEMENT -> {
                     name = xmlStreamReader.getLocalName();
-                    name = name.replace('-', '_');
+                    name = name.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
                     if (FlowerXmlTag.valueOf(name.toUpperCase()) == FlowerXmlTag.GROWING_TIPS) {
                         return growingTips;
                     }

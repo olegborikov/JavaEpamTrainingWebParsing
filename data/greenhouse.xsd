@@ -14,9 +14,7 @@
     <element name="greenhouse">
         <complexType>
             <sequence>
-                <element ref="tns:flower"
-                         minOccurs="2"
-                         maxOccurs="unbounded"/>
+                <element ref="tns:flower" minOccurs="1" maxOccurs="unbounded"/>
             </sequence>
         </complexType>
     </element>
@@ -83,7 +81,8 @@
 
     <simpleType name="PlantSize">
         <restriction base="positiveInteger">
-            <pattern value="[\d]{1,4}"/>
+            <minInclusive value="1"/>
+            <maxInclusive value="1000"/>
         </restriction>
     </simpleType>
 
@@ -103,13 +102,15 @@
 
     <simpleType name="Temperature">
         <restriction base="integer">
-            <pattern value="\+?[\d]{1,2}"/>
+            <minInclusive value="-40"/>
+            <maxInclusive value="+40"/>
         </restriction>
     </simpleType>
 
     <simpleType name="WaterPerWeek">
         <restriction base="integer">
-            <pattern value="[\d]{1,4}"/>
+            <minInclusive value="1"/>
+            <maxInclusive value="5000"/>
         </restriction>
     </simpleType>
 

@@ -19,10 +19,10 @@ public class FlowerHandler extends DefaultHandler {
     private Flower currentFlower;
     private FlowerXmlTag currentXmlTag;
     private EnumSet<FlowerXmlTag> tagsWithText;
-    private static final String ELEMENT_DECORATIVE_FLOWER = "decorative-flower";
-    private static final String ELEMENT_WILD_FLOWER = "wild-flower";
     private static final SoilType SOIL_TYPE_DEFAULT = SoilType.PODZOLIC;
     private static final Logger LOGGER = LogManager.getLogger();
+    private static final char OLD_SYMBOL_REPLACE = '-';
+    private static final char NEW_SYMBOL_REPLACE = '_';
 
     public FlowerHandler() {
         flowers = new HashSet<>();
@@ -34,9 +34,11 @@ public class FlowerHandler extends DefaultHandler {
     }
 
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attrs) {
-        if (ELEMENT_DECORATIVE_FLOWER.equals(qName) || ELEMENT_WILD_FLOWER.equals(qName)) {
-            if (ELEMENT_DECORATIVE_FLOWER.equals(qName)) {
+    public void startElement(String uri, String localName,
+                             String qName, Attributes attrs) {
+        if (FlowerXmlTag.DECORATIVE_FLOWER.getValue().equals(qName)
+                || FlowerXmlTag.WILD_FLOWER.getValue().equals(qName)) {
+            if (FlowerXmlTag.DECORATIVE_FLOWER.getValue().equals(qName)) {
                 currentFlower = new DecorativeFlower();
             } else {
                 currentFlower = new WildFlower();
@@ -45,13 +47,13 @@ public class FlowerHandler extends DefaultHandler {
             currentFlower.setName(name);
             String soil = attrs.getValue(FlowerXmlTag.SOIL.getValue());
             if (soil != null) {
-                soil = soil.replace('-', '_');
+                soil = soil.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
                 currentFlower.setSoilType(SoilType.valueOf(soil.toUpperCase()));
             } else {
                 currentFlower.setSoilType(SOIL_TYPE_DEFAULT);
             }
         } else {
-            qName = qName.replace('-', '_');
+            qName = qName.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
             FlowerXmlTag temp = FlowerXmlTag.valueOf(qName.toUpperCase());
             if (tagsWithText.contains(temp)) {
                 currentXmlTag = temp;
@@ -61,7 +63,8 @@ public class FlowerHandler extends DefaultHandler {
 
     @Override
     public void endElement(String uri, String localName, String qName) {
-        if (ELEMENT_DECORATIVE_FLOWER.equals(qName) || ELEMENT_WILD_FLOWER.equals(qName)) {
+        if (FlowerXmlTag.DECORATIVE_FLOWER.getValue().equals(qName)
+                || FlowerXmlTag.WILD_FLOWER.getValue().equals(qName)) {
             flowers.add(currentFlower);
         }
     }
@@ -86,7 +89,7 @@ public class FlowerHandler extends DefaultHandler {
                 case LEAVE_COLOR -> currentFlower.getVisualParameters().setLeaveColor(data);
                 case AVERAGE_PLANT_SIZE -> currentFlower.getVisualParameters().setAveragePlantSize(Integer.parseInt(data));
                 case MULTIPLYING -> {
-                    data = data.replace('-', '_');
+                    data = data.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
                     ((WildFlower) currentFlower).setMultiplyingType(MultiplyingType.valueOf(data.toUpperCase()));
                 }
                 case ORIGIN -> ((WildFlower) currentFlower).setOrigin(data);

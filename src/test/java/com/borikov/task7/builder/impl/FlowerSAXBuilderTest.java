@@ -1,5 +1,6 @@
-package com.borikov.task7.builder;
+package com.borikov.task7.builder.impl;
 
+import com.borikov.task7.builder.AbstractFlowerBuilder;
 import com.borikov.task7.entity.Flower;
 import com.borikov.task7.warehouse.FlowerWarehouse;
 import org.testng.annotations.AfterClass;
@@ -10,24 +11,24 @@ import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
 
-public class FlowerDomBuilderTest {
-    private FlowerDomBuilder flowerDomBuilder;
+public class FlowerSAXBuilderTest {
+    private AbstractFlowerBuilder builder;
 
     @BeforeClass
     public void setUp() {
-        flowerDomBuilder = new FlowerDomBuilder();
+        builder = new FlowerSAXBuilder();
     }
 
     @AfterClass
     public void tearDown() {
-        flowerDomBuilder = null;
+        builder = null;
     }
 
     @Test
     public void buildFlowersTest() {
         Set<Flower> expected = FlowerWarehouse.getFlowers();
-        flowerDomBuilder.buildSetFlowers("data/greenhouse.xml");
-        Set<Flower> actual = flowerDomBuilder.getFlowers();
+        builder.buildSetFlowers("data/greenhouse.xml");
+        Set<Flower> actual = builder.getFlowers();
         assertEquals(actual, expected);
     }
 }

@@ -1,6 +1,6 @@
 package com.borikov.task7.entity;
 
-public enum  SoilType {
+public enum SoilType {
     PODZOLIC,
     UNPAVED,
     SOD_PODZOLIC

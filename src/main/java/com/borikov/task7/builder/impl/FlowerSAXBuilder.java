@@ -1,6 +1,7 @@
-package com.borikov.task7.builder;
+package com.borikov.task7.builder.impl;
 
-import com.borikov.task7.entity.Flower;
+import com.borikov.task7.builder.AbstractFlowerBuilder;
+import com.borikov.task7.builder.FlowerHandler;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,16 +12,13 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Set;
 
-public class FlowerSaxBuilder {
-    private static final Logger LOGGER = LogManager.getLogger();
-    private Set<Flower> flowers;
+public class FlowerSAXBuilder extends AbstractFlowerBuilder {
     private FlowerHandler flowerHandler = new FlowerHandler();
     private XMLReader xmlReader;
+    private static final Logger LOGGER = LogManager.getLogger();
 
-    public FlowerSaxBuilder() {
+    public FlowerSAXBuilder() {
         SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
         try {
             SAXParser saxParser = saxParserFactory.newSAXParser();
@@ -29,10 +27,6 @@ public class FlowerSaxBuilder {
             LOGGER.log(Level.ERROR, "Error while parsing", e);
         }
         xmlReader.setContentHandler(flowerHandler);
-    }
-
-    public Set<Flower> getFlowers() {
-        return Collections.unmodifiableSet(flowers);
     }
 
     public void buildSetFlowers(String fileName) {

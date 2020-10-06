@@ -17,9 +17,10 @@ public enum FlowerXmlTag {
     AVERAGE_PLANT_SIZE("average-plant-size"),
     MULTIPLYING("multiplying"),
     ORIGIN("origin");
+
     private final String value;
 
-    private FlowerXmlTag(String value) {
+    FlowerXmlTag(String value) {
         this.value = value;
     }
 
