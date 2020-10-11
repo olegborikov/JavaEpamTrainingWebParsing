@@ -1,18 +1,11 @@
 package com.borikov.task7.builder;
 
 import com.borikov.task7.entity.*;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.borikov.task7.parser.DataParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class FlowerHandler extends DefaultHandler {
     private Set<Flower> flowers;
@@ -20,9 +13,6 @@ public class FlowerHandler extends DefaultHandler {
     private FlowerXmlTag currentXmlTag;
     private EnumSet<FlowerXmlTag> tagsWithText;
     private static final SoilType SOIL_TYPE_DEFAULT = SoilType.PODZOLIC;
-    private static final Logger LOGGER = LogManager.getLogger();
-    private static final char OLD_SYMBOL_REPLACE = '-';
-    private static final char NEW_SYMBOL_REPLACE = '_';
 
     public FlowerHandler() {
         flowers = new HashSet<>();
@@ -47,14 +37,14 @@ public class FlowerHandler extends DefaultHandler {
             currentFlower.setName(name);
             String soil = attrs.getValue(FlowerXmlTag.SOIL.getValue());
             if (soil != null) {
-                soil = soil.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
-                currentFlower.setSoilType(SoilType.valueOf(soil.toUpperCase()));
+                soil = DataParser.parseToEnumValue(soil);
+                currentFlower.setSoilType(SoilType.valueOf(soil));
             } else {
                 currentFlower.setSoilType(SOIL_TYPE_DEFAULT);
             }
         } else {
-            qName = qName.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
-            FlowerXmlTag temp = FlowerXmlTag.valueOf(qName.toUpperCase());
+            qName = DataParser.parseToEnumValue(qName);
+            FlowerXmlTag temp = FlowerXmlTag.valueOf(qName);
             if (tagsWithText.contains(temp)) {
                 currentXmlTag = temp;
             }
@@ -72,25 +62,42 @@ public class FlowerHandler extends DefaultHandler {
     @Override
     public void characters(char[] ch, int start, int length) {
         String data = new String(ch, start, length).trim();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         if (currentXmlTag != null && currentFlower != null) {
             switch (currentXmlTag) {
-                case TEMPERATURE -> ((DecorativeFlower) currentFlower).getGrowingTips().setTemperature(Integer.parseInt(data));
-                case NEED_LIGHT -> ((DecorativeFlower) currentFlower).getGrowingTips().setNeedLight(Boolean.parseBoolean(data));
-                case WATER_PER_WEEK -> ((DecorativeFlower) currentFlower).getGrowingTips().setWaterPerWeek(Integer.parseInt(data));
+                case TEMPERATURE -> {
+                    GrowingTips growingTips = ((DecorativeFlower) currentFlower).getGrowingTips();
+                    growingTips.setTemperature(Integer.parseInt(data));
+                }
+                case NEED_LIGHT -> {
+                    GrowingTips growingTips = ((DecorativeFlower) currentFlower).getGrowingTips();
+                    growingTips.setNeedLight(Boolean.parseBoolean(data));
+                }
+                case WATER_PER_WEEK -> {
+                    GrowingTips growingTips = ((DecorativeFlower) currentFlower).getGrowingTips();
+                    growingTips.setWaterPerWeek(Integer.parseInt(data));
+                }
                 case DATE_OF_LANDING -> {
-                    try {
-                        ((DecorativeFlower) currentFlower).setDateOfLanding(simpleDateFormat.parse(data));
-                    } catch (ParseException e) {
-                        LOGGER.log(Level.ERROR, "Error while parsing date", e);
+                    Optional<Date> date = DataParser.parseToDate(data);
+                    if (date.isPresent()) {
+                        ((DecorativeFlower) currentFlower).setDateOfLanding(date.get());
                     }
                 }
-                case STEM_COLOR -> currentFlower.getVisualParameters().setStemColor(data);
-                case LEAVE_COLOR -> currentFlower.getVisualParameters().setLeaveColor(data);
-                case AVERAGE_PLANT_SIZE -> currentFlower.getVisualParameters().setAveragePlantSize(Integer.parseInt(data));
+                case STEM_COLOR -> {
+                    VisualParameters visualParameters = currentFlower.getVisualParameters();
+                    visualParameters.setStemColor(data);
+                }
+                case LEAVE_COLOR -> {
+                    VisualParameters visualParameters = currentFlower.getVisualParameters();
+                    visualParameters.setLeaveColor(data);
+                }
+                case AVERAGE_PLANT_SIZE -> {
+                    VisualParameters visualParameters = currentFlower.getVisualParameters();
+                    visualParameters.setAveragePlantSize(Integer.parseInt(data));
+                }
                 case MULTIPLYING -> {
-                    data = data.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
-                    ((WildFlower) currentFlower).setMultiplyingType(MultiplyingType.valueOf(data.toUpperCase()));
+                    data = DataParser.parseToEnumValue(data);
+                    MultiplyingType multiplyingType = MultiplyingType.valueOf(data);
+                    ((WildFlower) currentFlower).setMultiplyingType(multiplyingType);
                 }
                 case ORIGIN -> ((WildFlower) currentFlower).setOrigin(data);
                 default -> throw new EnumConstantNotPresentException(

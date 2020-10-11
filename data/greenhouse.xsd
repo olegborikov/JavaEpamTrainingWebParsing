@@ -103,7 +103,7 @@
     <simpleType name="Temperature">
         <restriction base="integer">
             <minInclusive value="-40"/>
-            <maxInclusive value="+40"/>
+            <maxInclusive value="40"/>
         </restriction>
     </simpleType>
 

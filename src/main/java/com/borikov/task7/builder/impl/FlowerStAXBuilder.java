@@ -3,6 +3,7 @@ package com.borikov.task7.builder.impl;
 import com.borikov.task7.builder.AbstractFlowerBuilder;
 import com.borikov.task7.builder.FlowerXmlTag;
 import com.borikov.task7.entity.*;
+import com.borikov.task7.parser.DataParser;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,15 +16,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Optional;
 
 public class FlowerStAXBuilder extends AbstractFlowerBuilder {
     private static final SoilType SOIL_TYPE_DEFAULT = SoilType.PODZOLIC;
     private XMLInputFactory inputFactory;
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final char OLD_SYMBOL_REPLACE = '-';
-    private static final char NEW_SYMBOL_REPLACE = '_';
 
     public FlowerStAXBuilder() {
         inputFactory = XMLInputFactory.newInstance();
@@ -36,12 +35,12 @@ public class FlowerStAXBuilder extends AbstractFlowerBuilder {
                 int type = xmlStreamReader.next();
                 if (type == XMLStreamConstants.START_ELEMENT) {
                     String name = xmlStreamReader.getLocalName();
-                    name = name.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
-                    if (FlowerXmlTag.valueOf(name.toUpperCase()) == FlowerXmlTag.DECORATIVE_FLOWER) {
+                    name = DataParser.parseToEnumValue(name);
+                    if (FlowerXmlTag.valueOf(name) == FlowerXmlTag.DECORATIVE_FLOWER) {
                         Flower flower = buildFlower(xmlStreamReader, new DecorativeFlower());
                         flowers.add(flower);
                     }
-                    if (FlowerXmlTag.valueOf(name.toUpperCase()) == FlowerXmlTag.WILD_FLOWER) {
+                    if (FlowerXmlTag.valueOf(name) == FlowerXmlTag.WILD_FLOWER) {
                         Flower flower = buildFlower(xmlStreamReader, new WildFlower());
                         flowers.add(flower);
                     }
@@ -60,8 +59,8 @@ public class FlowerStAXBuilder extends AbstractFlowerBuilder {
         flower.setName(xmlStreamReader.getAttributeValue(null, FlowerXmlTag.NAME.getValue()));
         String soil = (xmlStreamReader.getAttributeValue(null, FlowerXmlTag.SOIL.getValue()));
         if (soil != null) {
-            soil = soil.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
-            flower.setSoilType(SoilType.valueOf(soil.toUpperCase()));
+            soil = DataParser.parseToEnumValue(soil);
+            flower.setSoilType(SoilType.valueOf(soil));
         } else {
             flower.setSoilType(SOIL_TYPE_DEFAULT);
         }
@@ -71,31 +70,35 @@ public class FlowerStAXBuilder extends AbstractFlowerBuilder {
             switch (type) {
                 case XMLStreamConstants.START_ELEMENT -> {
                     name = xmlStreamReader.getLocalName();
-                    name = name.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
-                    switch (FlowerXmlTag.valueOf(name.toUpperCase())) {
-                        case VISUAL_PARAMETERS -> flower.setVisualParameters(getXmlVisualParameters(xmlStreamReader));
-                        case GROWING_TIPS -> ((DecorativeFlower) flower).setGrowingTips(getXmlGrowingTips(xmlStreamReader));
+                    name = DataParser.parseToEnumValue(name);
+                    switch (FlowerXmlTag.valueOf(name)) {
+                        case VISUAL_PARAMETERS -> {
+                            VisualParameters visualParameters = getXmlVisualParameters(xmlStreamReader);
+                            flower.setVisualParameters(visualParameters);
+                        }
+                        case GROWING_TIPS -> {
+                            GrowingTips growingTips = getXmlGrowingTips(xmlStreamReader);
+                            ((DecorativeFlower) flower).setGrowingTips(growingTips);
+                        }
                         case DATE_OF_LANDING -> {
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                            try {
-                                ((DecorativeFlower) flower).setDateOfLanding(simpleDateFormat.parse(getXmlText(xmlStreamReader)));
-                            } catch (ParseException e) {
-                                LOGGER.log(Level.ERROR, "Error while parsing date", e);
+                            Optional<Date> date = DataParser.parseToDate(getXmlText(xmlStreamReader));
+                            if (date.isPresent()) {
+                                ((DecorativeFlower) flower).setDateOfLanding(date.get());
                             }
                         }
                         case MULTIPLYING -> {
                             String multiplying = getXmlText(xmlStreamReader);
-                            multiplying = multiplying.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
-                            ((WildFlower) flower).setMultiplyingType(MultiplyingType.valueOf(multiplying.toUpperCase()));
+                            multiplying = DataParser.parseToEnumValue(multiplying);
+                            ((WildFlower) flower).setMultiplyingType(MultiplyingType.valueOf(multiplying));
                         }
                         case ORIGIN -> ((WildFlower) flower).setOrigin(getXmlText(xmlStreamReader));
                     }
                 }
                 case XMLStreamConstants.END_ELEMENT -> {
                     name = xmlStreamReader.getLocalName();
-                    name = name.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
-                    if (FlowerXmlTag.valueOf(name.toUpperCase()) == FlowerXmlTag.DECORATIVE_FLOWER
-                            || FlowerXmlTag.valueOf(name.toUpperCase()) == FlowerXmlTag.WILD_FLOWER) {
+                    name = DataParser.parseToEnumValue(name);
+                    if (FlowerXmlTag.valueOf(name) == FlowerXmlTag.DECORATIVE_FLOWER
+                            || FlowerXmlTag.valueOf(name) == FlowerXmlTag.WILD_FLOWER) {
                         return flower;
                     }
                 }
@@ -113,8 +116,8 @@ public class FlowerStAXBuilder extends AbstractFlowerBuilder {
             switch (type) {
                 case XMLStreamConstants.START_ELEMENT -> {
                     name = xmlStreamReader.getLocalName();
-                    name = name.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
-                    switch (FlowerXmlTag.valueOf(name.toUpperCase())) {
+                    name = DataParser.parseToEnumValue(name);
+                    switch (FlowerXmlTag.valueOf(name)) {
                         case STEM_COLOR -> visualParameters.setStemColor(getXmlText(xmlStreamReader));
                         case LEAVE_COLOR -> visualParameters.setLeaveColor(getXmlText(xmlStreamReader));
                         case AVERAGE_PLANT_SIZE -> {
@@ -125,8 +128,8 @@ public class FlowerStAXBuilder extends AbstractFlowerBuilder {
                 }
                 case XMLStreamConstants.END_ELEMENT -> {
                     name = xmlStreamReader.getLocalName();
-                    name = name.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
-                    if (FlowerXmlTag.valueOf(name.toUpperCase()) == FlowerXmlTag.VISUAL_PARAMETERS) {
+                    name = DataParser.parseToEnumValue(name);
+                    if (FlowerXmlTag.valueOf(name) == FlowerXmlTag.VISUAL_PARAMETERS) {
                         return visualParameters;
                     }
                 }
@@ -144,17 +147,26 @@ public class FlowerStAXBuilder extends AbstractFlowerBuilder {
             switch (type) {
                 case XMLStreamConstants.START_ELEMENT -> {
                     name = xmlStreamReader.getLocalName();
-                    name = name.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
-                    switch (FlowerXmlTag.valueOf(name.toUpperCase())) {
-                        case TEMPERATURE -> growingTips.setTemperature(Integer.parseInt(getXmlText(xmlStreamReader)));
-                        case NEED_LIGHT -> growingTips.setNeedLight(Boolean.parseBoolean(getXmlText(xmlStreamReader)));
-                        case WATER_PER_WEEK -> growingTips.setWaterPerWeek(Integer.parseInt(getXmlText(xmlStreamReader)));
+                    name = DataParser.parseToEnumValue(name);
+                    switch (FlowerXmlTag.valueOf(name)) {
+                        case TEMPERATURE -> {
+                            String temperature = getXmlText(xmlStreamReader);
+                            growingTips.setTemperature(Integer.parseInt(temperature));
+                        }
+                        case NEED_LIGHT -> {
+                            String needLight = getXmlText(xmlStreamReader);
+                            growingTips.setNeedLight(Boolean.parseBoolean(needLight));
+                        }
+                        case WATER_PER_WEEK -> {
+                            String waterPerWeek = getXmlText(xmlStreamReader);
+                            growingTips.setWaterPerWeek(Integer.parseInt(waterPerWeek));
+                        }
                     }
                 }
                 case XMLStreamConstants.END_ELEMENT -> {
                     name = xmlStreamReader.getLocalName();
-                    name = name.replace(OLD_SYMBOL_REPLACE, NEW_SYMBOL_REPLACE);
-                    if (FlowerXmlTag.valueOf(name.toUpperCase()) == FlowerXmlTag.GROWING_TIPS) {
+                    name = DataParser.parseToEnumValue(name);
+                    if (FlowerXmlTag.valueOf(name) == FlowerXmlTag.GROWING_TIPS) {
                         return growingTips;
                     }
                 }

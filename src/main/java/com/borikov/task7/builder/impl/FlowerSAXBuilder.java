@@ -14,7 +14,7 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 
 public class FlowerSAXBuilder extends AbstractFlowerBuilder {
-    private FlowerHandler flowerHandler = new FlowerHandler();
+    private final FlowerHandler flowerHandler = new FlowerHandler();
     private XMLReader xmlReader;
     private static final Logger LOGGER = LogManager.getLogger();
 
