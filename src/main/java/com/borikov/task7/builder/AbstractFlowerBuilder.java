@@ -8,11 +8,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class AbstractFlowerBuilder {
-    protected Set<Flower> flowers = new HashSet<>();
+    protected Set<Flower> flowers;
+
+    public AbstractFlowerBuilder() {
+        flowers = new HashSet<>();
+    }
 
     public Set<Flower> getFlowers() {
         return Collections.unmodifiableSet(flowers);
     }
 
-    public abstract void buildSetFlowers(String fileName) throws XMLFlowerParserException;
+    public abstract void buildFlowers(String fileName) throws XMLFlowerParserException;
 }

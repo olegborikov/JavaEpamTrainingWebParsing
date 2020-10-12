@@ -34,7 +34,7 @@ public class FlowerSAXBuilderTest {
     public void buildFlowersTest() {
         try {
             Set<Flower> expected = FlowerWarehouse.getFlowers();
-            builder.buildSetFlowers("data/greenhouse.xml");
+            builder.buildFlowers("data/greenhouse.xml");
             Set<Flower> actual = builder.getFlowers();
             assertEquals(actual, expected);
         } catch (XMLFlowerParserException e) {

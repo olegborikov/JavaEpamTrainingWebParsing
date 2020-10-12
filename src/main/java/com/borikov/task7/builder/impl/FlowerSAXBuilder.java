@@ -26,7 +26,7 @@ public class FlowerSAXBuilder extends AbstractFlowerBuilder {
         }
     }
 
-    public void buildSetFlowers(String fileName) throws XMLFlowerParserException {
+    public void buildFlowers(String fileName) throws XMLFlowerParserException {
         try {
             xmlReader.parse(fileName);
             flowers = flowerHandler.getFlowers();

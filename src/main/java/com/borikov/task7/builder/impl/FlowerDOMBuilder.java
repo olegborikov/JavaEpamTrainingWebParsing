@@ -31,7 +31,7 @@ public class FlowerDOMBuilder extends AbstractFlowerBuilder {
         }
     }
 
-    public void buildSetFlowers(String fileName) throws XMLFlowerParserException {
+    public void buildFlowers(String fileName) throws XMLFlowerParserException {
         try {
             Document document = documentBuilder.parse(fileName);
             Element root = document.getDocumentElement();

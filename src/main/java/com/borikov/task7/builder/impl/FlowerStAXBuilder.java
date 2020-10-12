@@ -24,7 +24,7 @@ public class FlowerStAXBuilder extends AbstractFlowerBuilder {
         inputFactory = XMLInputFactory.newInstance();
     }
 
-    public void buildSetFlowers(String fileName) throws XMLFlowerParserException {
+    public void buildFlowers(String fileName) throws XMLFlowerParserException {
         try (FileInputStream fileInputStream = new FileInputStream(new File(fileName));) {
             XMLStreamReader xmlStreamReader = inputFactory.createXMLStreamReader(fileInputStream);
             while (xmlStreamReader.hasNext()) {

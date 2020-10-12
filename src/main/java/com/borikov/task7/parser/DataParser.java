@@ -11,10 +11,10 @@ import java.util.Optional;
 
 public class DataParser {
     private static final Logger LOGGER = LogManager.getLogger();
-    public static final String DATE_PATTERN = "yyyy-MM-dd";
     private static final char OLD_SYMBOL_REPLACE = '-';
     private static final char NEW_SYMBOL_REPLACE = '_';
-    public static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_PATTERN);
+    public static final SimpleDateFormat simpleDateFormat =
+            new SimpleDateFormat("yyyy-MM-dd");
 
     public static Optional<Date> parseToDate(String data) {
         Optional<Date> dateOptional;
