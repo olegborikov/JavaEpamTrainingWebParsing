@@ -1,7 +1,11 @@
-package com.borikov.task7.builder;
+package com.borikov.task7.builder.impl.handler;
 
+import com.borikov.task7.builder.FlowerXmlTag;
 import com.borikov.task7.entity.*;
 import com.borikov.task7.parser.DataParser;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -13,6 +17,7 @@ public class FlowerHandler extends DefaultHandler {
     private FlowerXmlTag currentXmlTag;
     private EnumSet<FlowerXmlTag> tagsWithText;
     private static final SoilType SOIL_TYPE_DEFAULT = SoilType.PODZOLIC;
+    private static final Logger LOGGER = LogManager.getLogger();
 
     public FlowerHandler() {
         flowers = new HashSet<>();
@@ -65,15 +70,18 @@ public class FlowerHandler extends DefaultHandler {
         if (currentXmlTag != null && currentFlower != null) {
             switch (currentXmlTag) {
                 case TEMPERATURE -> {
-                    GrowingTips growingTips = ((DecorativeFlower) currentFlower).getGrowingTips();
+                    GrowingTips growingTips =
+                            ((DecorativeFlower) currentFlower).getGrowingTips();
                     growingTips.setTemperature(Integer.parseInt(data));
                 }
                 case NEED_LIGHT -> {
-                    GrowingTips growingTips = ((DecorativeFlower) currentFlower).getGrowingTips();
+                    GrowingTips growingTips =
+                            ((DecorativeFlower) currentFlower).getGrowingTips();
                     growingTips.setNeedLight(Boolean.parseBoolean(data));
                 }
                 case WATER_PER_WEEK -> {
-                    GrowingTips growingTips = ((DecorativeFlower) currentFlower).getGrowingTips();
+                    GrowingTips growingTips =
+                            ((DecorativeFlower) currentFlower).getGrowingTips();
                     growingTips.setWaterPerWeek(Integer.parseInt(data));
                 }
                 case DATE_OF_LANDING -> {
@@ -100,8 +108,7 @@ public class FlowerHandler extends DefaultHandler {
                     ((WildFlower) currentFlower).setMultiplyingType(multiplyingType);
                 }
                 case ORIGIN -> ((WildFlower) currentFlower).setOrigin(data);
-                default -> throw new EnumConstantNotPresentException(
-                        currentXmlTag.getDeclaringClass(), currentXmlTag.name());
+                default -> LOGGER.log(Level.WARN, "{} is not enum element", currentXmlTag);
             }
         }
         currentXmlTag = null;

@@ -3,10 +3,8 @@ package com.borikov.task7.builder.impl;
 import com.borikov.task7.builder.AbstractFlowerBuilder;
 import com.borikov.task7.builder.FlowerXmlTag;
 import com.borikov.task7.entity.*;
+import com.borikov.task7.exception.XMLFlowerParserException;
 import com.borikov.task7.parser.DataParser;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -23,42 +21,40 @@ import java.util.Optional;
 public class FlowerDOMBuilder extends AbstractFlowerBuilder {
     private static final SoilType SOIL_TYPE_DEFAULT = SoilType.PODZOLIC;
     private DocumentBuilder documentBuilder;
-    private static final Logger LOGGER = LogManager.getLogger();
 
-    public FlowerDOMBuilder() {
+    public FlowerDOMBuilder() throws XMLFlowerParserException {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         try {
             documentBuilder = documentBuilderFactory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
-            LOGGER.log(Level.ERROR, "Error in parser configuration", e);
+            throw new XMLFlowerParserException("Error in parser configuration", e);
         }
     }
 
-    public void buildSetFlowers(String fileName) {
-        Document document;
+    public void buildSetFlowers(String fileName) throws XMLFlowerParserException {
         try {
-            document = documentBuilder.parse(fileName);
+            Document document = documentBuilder.parse(fileName);
             Element root = document.getDocumentElement();
-            NodeList decorativeFlowersList =
-                    root.getElementsByTagName(FlowerXmlTag.DECORATIVE_FLOWER.getValue());
-            for (int i = 0; i < decorativeFlowersList.getLength(); i++) {
-                Element flowerElement = (Element) decorativeFlowersList.item(i);
-                Flower flower = buildFlowers(flowerElement, new DecorativeFlower());
-                flowers.add(flower);
-            }
-            NodeList wildFlowersList =
-                    root.getElementsByTagName(FlowerXmlTag.WILD_FLOWER.getValue());
-            for (int i = 0; i < wildFlowersList.getLength(); i++) {
-                Element flowerElement = (Element) wildFlowersList.item(i);
-                Flower flower = buildFlowers(flowerElement, new WildFlower());
-                flowers.add(flower);
+            NodeList flowersList = root.getChildNodes();
+            for (int i = 0; i < flowersList.getLength(); i++) {
+                if (flowersList.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                    Element flowerElement = (Element) flowersList.item(i);
+                    Flower flower = buildFlower(flowerElement);
+                    flowers.add(flower);
+                }
             }
         } catch (IOException | SAXException e) {
-            LOGGER.log(Level.ERROR, "Error while parsing", e);
+            throw new XMLFlowerParserException("Error while parsing", e);
         }
     }
 
-    private Flower buildFlowers(Element flowerElement, Flower flower) {
+    private Flower buildFlower(Element flowerElement) {
+        Flower flower;
+        if (flowerElement.getTagName().equals(FlowerXmlTag.DECORATIVE_FLOWER.getValue())) {
+            flower = buildDecorativeFlower(flowerElement);
+        } else {
+            flower = buildWildFlower(flowerElement);
+        }
         String soilName = flowerElement.getAttribute(FlowerXmlTag.SOIL.getValue());
         if (soilName != null && !soilName.isBlank()) {
             soilName = DataParser.parseToEnumValue(soilName);
@@ -70,41 +66,61 @@ public class FlowerDOMBuilder extends AbstractFlowerBuilder {
         NodeList visualParametersElements =
                 flowerElement.getElementsByTagName(FlowerXmlTag.VISUAL_PARAMETERS.getValue());
         Element visualParametersElement = (Element) visualParametersElements.item(0);
-        String stemColor = getTextContent(visualParametersElement, FlowerXmlTag.STEM_COLOR.getValue());
-        String leaveColor = getTextContent(visualParametersElement, FlowerXmlTag.LEAVE_COLOR.getValue());
-        String averagePlantSize = getTextContent(visualParametersElement, FlowerXmlTag.AVERAGE_PLANT_SIZE.getValue());
-        VisualParameters visualParameters = flower.getVisualParameters();
+        flower.setVisualParameters(buildVisualParameters(visualParametersElement));
+        return flower;
+    }
+
+    private DecorativeFlower buildDecorativeFlower(Element flowerElement) {
+        DecorativeFlower decorativeFlower = new DecorativeFlower();
+        NodeList growingTipsElements =
+                flowerElement.getElementsByTagName(FlowerXmlTag.GROWING_TIPS.getValue());
+        Element growingTipsElement = (Element) growingTipsElements.item(0);
+        decorativeFlower.setGrowingTips(buildGrowingTips(growingTipsElement));
+        String date = getTextContent(flowerElement, FlowerXmlTag.DATE_OF_LANDING.getValue());
+        Optional<Date> dateOfLanding = DataParser.parseToDate(date);
+        if (dateOfLanding.isPresent()) {
+            decorativeFlower.setDateOfLanding(dateOfLanding.get());
+        }
+        return decorativeFlower;
+    }
+
+    private WildFlower buildWildFlower(Element flowerElement) {
+        WildFlower wildFlower = new WildFlower();
+        String multiplying =
+                getTextContent(flowerElement, FlowerXmlTag.MULTIPLYING.getValue());
+        multiplying = DataParser.parseToEnumValue(multiplying);
+        wildFlower.setMultiplyingType(MultiplyingType.valueOf(multiplying));
+        String origin = getTextContent(flowerElement, FlowerXmlTag.ORIGIN.getValue());
+        wildFlower.setOrigin(origin);
+        return wildFlower;
+    }
+
+    private GrowingTips buildGrowingTips(Element growingTipsElement) {
+        GrowingTips growingTips = new GrowingTips();
+        String temperature = getTextContent(growingTipsElement,
+                FlowerXmlTag.TEMPERATURE.getValue());
+        String needLight = getTextContent(growingTipsElement,
+                FlowerXmlTag.NEED_LIGHT.getValue());
+        String waterPerWeek = getTextContent(growingTipsElement,
+                FlowerXmlTag.WATER_PER_WEEK.getValue());
+        growingTips.setNeedLight(Boolean.parseBoolean(needLight));
+        growingTips.setTemperature(Integer.parseInt(temperature));
+        growingTips.setWaterPerWeek(Integer.parseInt(waterPerWeek));
+        return growingTips;
+    }
+
+    private VisualParameters buildVisualParameters(Element visualParametersElement) {
+        VisualParameters visualParameters = new VisualParameters();
+        String stemColor = getTextContent(visualParametersElement,
+                FlowerXmlTag.STEM_COLOR.getValue());
+        String leaveColor = getTextContent(visualParametersElement,
+                FlowerXmlTag.LEAVE_COLOR.getValue());
+        String averagePlantSize = getTextContent(visualParametersElement,
+                FlowerXmlTag.AVERAGE_PLANT_SIZE.getValue());
         visualParameters.setLeaveColor(leaveColor);
         visualParameters.setStemColor(stemColor);
         visualParameters.setAveragePlantSize(Integer.parseInt(averagePlantSize));
-        if (flower instanceof DecorativeFlower) {
-            NodeList growingTipsElements =
-                    flowerElement.getElementsByTagName(FlowerXmlTag.GROWING_TIPS.getValue());
-            Element growingTipsElement = (Element) growingTipsElements.item(0);
-            String temperature = getTextContent(growingTipsElement,
-                    FlowerXmlTag.TEMPERATURE.getValue());
-            String needLight = getTextContent(growingTipsElement,
-                    FlowerXmlTag.NEED_LIGHT.getValue());
-            String waterPerWeek = getTextContent(growingTipsElement,
-                    FlowerXmlTag.WATER_PER_WEEK.getValue());
-            GrowingTips growingTips = ((DecorativeFlower) flower).getGrowingTips();
-            growingTips.setNeedLight(Boolean.parseBoolean(needLight));
-            growingTips.setTemperature(Integer.parseInt(temperature));
-            growingTips.setWaterPerWeek(Integer.parseInt(waterPerWeek));
-            String date = getTextContent(flowerElement, FlowerXmlTag.DATE_OF_LANDING.getValue());
-            Optional<Date> dateOfLanding = DataParser.parseToDate(date);
-            if (dateOfLanding.isPresent()) {
-                ((DecorativeFlower) flower).setDateOfLanding(dateOfLanding.get());
-            }
-        } else {
-            String multiplying =
-                    getTextContent(flowerElement, FlowerXmlTag.MULTIPLYING.getValue());
-            multiplying = DataParser.parseToEnumValue(multiplying);
-            ((WildFlower) flower).setMultiplyingType(MultiplyingType.valueOf(multiplying));
-            String origin = getTextContent(flowerElement, FlowerXmlTag.ORIGIN.getValue());
-            ((WildFlower) flower).setOrigin(origin);
-        }
-        return flower;
+        return visualParameters;
     }
 
     private static String getTextContent(Element element, String elementName) {

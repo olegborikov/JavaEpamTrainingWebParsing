@@ -1,10 +1,8 @@
 package com.borikov.task7.builder.impl;
 
 import com.borikov.task7.builder.AbstractFlowerBuilder;
-import com.borikov.task7.builder.FlowerHandler;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.borikov.task7.builder.impl.handler.FlowerHandler;
+import com.borikov.task7.exception.XMLFlowerParserException;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -16,25 +14,24 @@ import java.io.IOException;
 public class FlowerSAXBuilder extends AbstractFlowerBuilder {
     private final FlowerHandler flowerHandler = new FlowerHandler();
     private XMLReader xmlReader;
-    private static final Logger LOGGER = LogManager.getLogger();
 
-    public FlowerSAXBuilder() {
-        SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+    public FlowerSAXBuilder() throws XMLFlowerParserException {
         try {
+            SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
             SAXParser saxParser = saxParserFactory.newSAXParser();
             xmlReader = saxParser.getXMLReader();
+            xmlReader.setContentHandler(flowerHandler);
         } catch (SAXException | ParserConfigurationException e) {
-            LOGGER.log(Level.ERROR, "Error while parsing", e);
+            throw new XMLFlowerParserException("Error in parser configuration", e);
         }
-        xmlReader.setContentHandler(flowerHandler);
     }
 
-    public void buildSetFlowers(String fileName) {
+    public void buildSetFlowers(String fileName) throws XMLFlowerParserException {
         try {
             xmlReader.parse(fileName);
+            flowers = flowerHandler.getFlowers();
         } catch (SAXException | IOException e) {
-            LOGGER.log(Level.ERROR, "Error while parsing", e);
+            throw new XMLFlowerParserException("Error while parsing", e);
         }
-        flowers = flowerHandler.getFlowers();
     }
 }
